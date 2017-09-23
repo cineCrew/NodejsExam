@@ -12,12 +12,15 @@ var output2=shasum2.digest('hex');
 console.log('wrong hash='+output2);
 
 var secret_key="1234567890@@@";
-var cipher=crypto.createHash('aes192',secret_key);
-cipher.update(password,'utf8', 'base64');
+
+var cipher=crypto.createCipher('aes192',secret_key);
+cipher.update(password,'utf8','base64');
+
 var cipheredOutput=cipher.final('base64');
-var decipheredOutput=decipher.final('utf8');
+//var decipheredOutput=decipher.final('utf8');
+
 console.log('ciphered password='+cipheredOutput);
-console.log('deciphered password='+decipheredOutput);
+//console.log('deciphered password='+decipheredOutput);
 
 
 var fs = require('fs');
@@ -31,7 +34,7 @@ fs.writeFile('password.txt', JSON.stringify(data), 'utf8', function(err){
 });
 fs.readFile('password.txt', 'utf8', function(err,data){
 
-	if(nerr) {
+	if(!err) {
 		console.log(err);
 	} else {
 		console.log('data='+data);
