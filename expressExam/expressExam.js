@@ -48,28 +48,21 @@ app.post('/login', function(req,res){
 	}
 });
 
-
-/*
-
 app.get('/a', function(req,res){
 	res.send("<a href='/b'>Go to B</a>"+
 		"<a href='/index.html'>Go to Home</a>"
 
 		);
-
 });
-
 app.get('/b', function(req,res){
 	res.send("<a href='/a'>Go to A</a>")
 	
 	});
-
 app.get('/page/:id',function(req,res){
 	var id = req.params.id;
 	res.send("<h1>"+id+' Page</h1>');
 	});
-
-
+/*
 app.use(function(req,res){
 	//res.writeHead(200,{'Content-Type':'text/html'});
 	//res.end('<h1>Hello, Express</h1>');

@@ -1,6 +1,12 @@
+//index.html
+//template.ejs
+//template.jade
+//cookie.js
+//request.response.js
+
 var http = require('http');
-var fs = require('fs');
 var ejs = require('ejs');
+var fs = require('fs');
 http.createServer(function(req,res){
 	if(req.method=='GET'){
 		console.log(req.url+" GET");
