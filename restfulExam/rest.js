@@ -57,7 +57,10 @@ var Storage = multer.diskStorage({
      }
  });
 
- var upload = multer({
+
+
+/*
+var upload = multer({
      storage: Storage
  }).single("image");
 app.post('/user/picture',function(req, res) {
@@ -139,31 +142,7 @@ app.delete('/user/message/:id',function(req,res) {
 			}
 		});
 });
-app.get('/user',function(req,res) {
-	connection.query('select * from user', 
-		function(err,results,fields) {
-			if (err) {
-				res.send(JSON.stringify(err));
-			} else {
-				res.send(JSON.stringify(results));
-			}
-		});
-});
-app.get('/user/:id',function(req,res){
-	connection.query('select * from user where id=?',
-		[req.params.id], function(err, results, fields) {
-			if (err) {
-				res.send(JSON.stringify(err));
-			} else {
-				if (results.length > 0) {
-					res.send(JSON.stringify(results[0]));
-				} else {
-					res.send(JSON.stringify({}));
-				}
-				
-			}
-		});
-});
+
 app.post('/user/nologin',function(req,res){
 	connection.query(
 		'insert into user_nologin(device_token) values(?)',
@@ -178,24 +157,9 @@ app.post('/user/nologin',function(req,res){
 });
 
 
+*/
 
-var crypto = require('crypto');
-app.post('/user',function(req,res){
-	var password = req.body.password;
-	var hash = crypto.createHash('sha256').
-		update(password).digest('base64');
-	connection.query(
-		'insert into user(user_id,password,name,age) values(?,?,?,?)',
-		[ req.body.user_id, hash, req.body.name, req.body.age ], 
-		function(err, result) {
-			if (err) {
-				res.send(JSON.stringify(err));
-			} else {
-				res.send(JSON.stringify(result));
-			}
-		})
-});
-
+// /user/login	로그인	POST	id, password
 var jwt = require('json-web-token');
 app.post('/user/login',function(req,res){
 	var password = req.body.password;
@@ -258,10 +222,27 @@ app.post('/user/login',function(req,res){
 });
 
 
-app.put('/user/:id',function(req,res){
+/* 
+메인 페이지 /task 
+
+POST:	테이블 요청
+PUT:	요청 수정
+DELETE:	요청 취소
+GET:	요청 검색
+GET:	요청 조회
+
+*/
+// POST: id, tablename, memo
+app.post('/signup',function(req,res){
+	console.log(req.body.tablename);
+	console.log(req.body.memo);
+
 	connection.query(
-		'update user set name=?,age=? where id=?',
-		[ req.body.name, req.body.age, req.params.id ],
+
+		//insert into task(id, tablename,memo) values(01,01,01);
+		'insert into task(id,tablename,memo) values(?,?,?)',
+		[ req.body.id, req.body.tablename, req.body.memo ], 
+
 		function(err, result) {
 			if (err) {
 				res.send(JSON.stringify(err));
@@ -270,8 +251,39 @@ app.put('/user/:id',function(req,res){
 			}
 		})
 });
-app.delete('/user/:id',function(req,res){
-	connection.query('delete from user where id=?',
+
+// /task 조회	GET	[]
+app.get('/task',function(req,res) {
+	connection.query('select * from task', 
+		function(err,results,fields) {
+			if (err) {
+				res.send(JSON.stringify(err));
+			} else {
+				res.send(JSON.stringify(results));
+			}
+		});
+});
+
+// /task 수정	PUT	rowid, id, tablename, memo
+app.put('/task/:id',function(req,res){
+	console.log(req.body.tablename);
+	console.log(req.body.memo);
+
+	connection.query(
+		'update task set tablename=?,memo=? where id=?',
+		[ req.body.tablename, req.body.memo, req.params.id ],
+		function(err, result) {
+			if (err) {
+				res.send(JSON.stringify(err));
+			} else {
+				res.send(JSON.stringify(result));
+			}
+		})
+});
+
+// /task 삭제	DELETE	rowid
+app.delete('/task/:id',function(req,res){
+	connection.query('delete from task where id=?',
 		[ req.params.id ], function(err, result) {
 			if (err) {
 				res.send(JSON.stringify(err));
@@ -280,6 +292,26 @@ app.delete('/user/:id',function(req,res){
 			}
 		});
 });
+
+/*
+app.get('/task/:id',function(req,res){
+	connection.query('select * from user where id=?',
+		[req.params.id], function(err, results, fields) {
+			if (err) {
+				res.send(JSON.stringify(err));
+			} else {
+				if (results.length > 0) {
+					res.send(JSON.stringify(results[0]));
+				} else {
+					res.send(JSON.stringify({}));
+				}
+				
+			}
+		});
+});
+
+*/
+
 app.listen(52273,function() {
 	console.log('Server running');
 });
